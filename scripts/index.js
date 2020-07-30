@@ -13,6 +13,10 @@ const deactivationPlayer = () => {
   temp.style.display = "none"; // скрытие надписи на главном экране
   playerBtn.forEach((item) => item.classList.remove("active"));
   playerBlock.forEach((item) => item.classList.remove("active"));
+
+  radioPlayerInit.stop();
+  musicPlayerInit.stop();
+  videoPlayerInit.stop();
 };
 
 // добавление класса "active" активным кнобкам и блокам

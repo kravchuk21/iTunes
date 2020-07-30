@@ -10,6 +10,8 @@ export const radioPlayerInit = () => {
   const audioVolumeDown = document.querySelector(".audio-volume-down");
   const audioVolume = document.querySelector(".audio-volume");
 
+  let prevVolume = 0.5;
+
   const audio = new Audio();
   audio.type = "audio/aac";
 
@@ -62,6 +64,7 @@ export const radioPlayerInit = () => {
   //изменение громкости радио
   audioVolume.addEventListener("input", () => {
     audio.volume = audioVolume.value / 100;
+    prevVolume = audio.volume;
   });
 
   audio.volume = 0.5; // громкость радио 50%
@@ -70,8 +73,14 @@ export const radioPlayerInit = () => {
 
   // громкость радио 0%
   audioVolumeDown.addEventListener("click", () => {
-    audio.volume = 0;
-    audioVolume.value = audio.volume * 100;
+    if (audio.volume) {
+      prevVolume = audio.volume;
+      audio.volume = 0;
+      audioVolume.value = audio.volume * 100;
+    } else {
+      audio.volume = prevVolume;
+      audioVolume.value = audio.volume * 100;
+    }
   });
 
   // громкость радио 100%
@@ -79,4 +88,9 @@ export const radioPlayerInit = () => {
     audio.volume = 1;
     audioVolume.value = audio.volume * 100;
   });
+
+  radioPlayerInit.stop = () => {
+    audio.pause();
+    changeIconPlay();
+  };
 };

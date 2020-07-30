@@ -14,6 +14,8 @@ export const videoPlayerInit = () => {
   const videoVolume = document.querySelector(".video-volume");
   const videoFullscreen = document.querySelector(".video-fullscreen");
 
+  let prevVolume = 0.5;
+
   // смена иконки play / pause
   const toggleIcon = () => {
     if (videoPlayer.paused) {
@@ -53,8 +55,12 @@ export const videoPlayerInit = () => {
     let minuteDuration = Math.floor(duration / 60);
     let secondsDuration = Math.floor(duration % 60);
 
-    videoTimePassed.textContent = `${addZero(minutePassed)}:${addZero(secondsPassed)}`; // текущее время видео (минуты : секунды)
-    videoTimeTotal.textContent = `${addZero(minuteDuration)}:${addZero(secondsDuration)}`; // полное время видео (минуты : секунды)
+    videoTimePassed.textContent = `${addZero(minutePassed)}:${addZero(
+      secondsPassed
+    )}`; // текущее время видео (минуты : секунды)
+    videoTimeTotal.textContent = `${addZero(minuteDuration)}:${addZero(
+      secondsDuration
+    )}`; // полное время видео (минуты : секунды)
   });
 
   // перемотка видео
@@ -72,6 +78,7 @@ export const videoPlayerInit = () => {
   //изменение громкости видео
   videoVolume.addEventListener("input", () => {
     videoPlayer.volume = videoVolume.value / 100;
+    prevVolume = videoPlayer.volume;
   });
 
   videoPlayer.volume = 0.5; // громкость видео 50%
@@ -80,8 +87,14 @@ export const videoPlayerInit = () => {
 
   // громкость видео 0%
   videoVolumeDown.addEventListener("click", () => {
-    videoPlayer.volume = 0;
-    videoVolume.value = videoPlayer.volume * 100;
+    if (videoPlayer.volume) {
+      prevVolume = videoPlayer.volume;
+      videoPlayer.volume = 0;
+      videoVolume.value = videoPlayer.volume * 100;
+    } else {
+      videoPlayer.volume = prevVolume;
+      videoVolume.value = videoPlayer.volume * 100;
+    }
   });
 
   // громкость видео 100%
@@ -89,4 +102,10 @@ export const videoPlayerInit = () => {
     videoPlayer.volume = 1;
     videoVolume.value = videoPlayer.volume * 100;
   });
+
+  videoPlayerInit.stop = () => {
+    if (!videoPlayer.paused) {
+      stopPlay();
+    }
+  };
 };
