@@ -6,6 +6,9 @@ export const radioPlayerInit = () => {
   const radioHeaderBig = document.querySelector(".radio-header__big");
   const radioItem = document.querySelectorAll(".radio-item");
   const radioStop = document.querySelector(".radio-stop");
+  const audioVolumeUp = document.querySelector(".audio-volume-up");
+  const audioVolumeDown = document.querySelector(".audio-volume-down");
+  const audioVolume = document.querySelector(".audio-volume");
 
   const audio = new Audio();
   audio.type = "audio/aac";
@@ -54,5 +57,26 @@ export const radioPlayerInit = () => {
     if (audio.paused) audio.play();
     else audio.pause();
     changeIconPlay();
+  });
+
+  //изменение громкости радио
+  audioVolume.addEventListener("input", () => {
+    audio.volume = audioVolume.value / 100;
+  });
+
+  audio.volume = 0.5; // громкость радио 50%
+
+  audioVolume.value = audio.volume * 100;
+
+  // громкость радио 0%
+  audioVolumeDown.addEventListener("click", () => {
+    audio.volume = 0;
+    audioVolume.value = audio.volume * 100;
+  });
+
+  // громкость радио 100%
+  audioVolumeUp.addEventListener("click", () => {
+    audio.volume = 1;
+    audioVolume.value = audio.volume * 100;
   });
 };
